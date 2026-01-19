@@ -6,17 +6,54 @@
   <title>Consulta de Nomes</title>
   <meta name="description" content="Sistema de consulta e busca de nomes">
   <meta name="theme-color" content="#000000">
+
+  <!-- CSS crítico inline (aplica estilo mesmo que style.css não carregue) -->
+  <style>
+    :root{
+      --background:#000;
+      --foreground:#fafafa;
+      --card:#1a1a1a;
+      --muted-foreground:#a3a3a3;
+      --border:#262626;
+      --radius:.625rem;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,sans-serif;
+      background:var(--background);
+      color:var(--foreground);
+      line-height:1.5;
+      -webkit-font-smoothing:antialiased;
+    }
+    .container{max-width:1280px;margin:0 auto;padding:2.5rem 1rem}
+    .header{text-align:left;margin-bottom:1.5rem}
+    .header h1{font-size:2.5rem;margin:0 0 .5rem;background:linear-gradient(to right,var(--foreground),rgba(250,250,250,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header p{color:var(--muted-foreground);margin:0 0 1rem}
+    .search-container{max-width:42rem;position:relative;margin-bottom:1rem}
+    .search-icon{position:absolute;left:0.4rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);width:20px;height:20px}
+    .search-input{width:100%;height:3rem;padding:0 1rem 0 2.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--foreground)}
+    .names-section{margin-bottom:1.25rem}
+    .letter-heading{font-size:1.5rem;color:var(--foreground);margin:1rem 0 .5rem}
+    .name-card{padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
+    /* notes menu */
+    .notes-menu{position:fixed;top:1rem;right:1rem;z-index:100}
+    .menu-button{display:inline-flex;flex-direction:column;gap:4px;width:40px;height:40px;border-radius:999px;border:1px solid var(--border);align-items:center;justify-content:center;background:transparent;color:var(--foreground)}
+    .menu-button span{width:6px;height:6px;background:var(--foreground);border-radius:50%}
+    .notes-dropdown{position:absolute;top:56px;right:0;background:var(--card);border:1px solid var(--border);padding:1rem;border-radius:.5rem;display:none;min-width:220px}
+    .notes-dropdown.active{display:block}
+  </style>
+
+  <!-- Link para o arquivo completo (mantém carregamento quando style.css existir corretamente) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Menu de Notas (3 pontinhos) -->
+  <!-- restante do HTML (sem mudança) -->
   <div class="notes-menu">
-    <button class="menu-button" id="notes-button" aria-label="Abrir notas dos desenvolvedores">
-      <span></span>
-      <span></span>
-      <span></span>
+    <button class="menu-button" id="notes-button" aria-label="Abrir notas dos desenvolvedores" aria-expanded="false">
+      <span></span><span></span><span></span>
     </button>
-    <div class="notes-dropdown" id="notes-dropdown">
+    <div class="notes-dropdown" id="notes-dropdown" role="dialog" aria-hidden="true">
       <h3>Notas do Site</h3>
       <ul class="notes-list">
         <li>Site criado para consulta rapida de nomes</li>
@@ -34,17 +71,11 @@
     </header>
 
     <div class="search-container">
-      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <path d="m21 21-4.3-4.3"></path>
       </svg>
-      <input 
-        type="text" 
-        class="search-input" 
-        id="search-input" 
-        placeholder="Digite um nome para buscar..."
-        aria-label="Buscar nomes"
-      >
+      <input type="text" class="search-input" id="search-input" placeholder="Digite um nome para buscar..." aria-label="Buscar nomes">
     </div>
 
     <div id="content">
