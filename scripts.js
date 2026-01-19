@@ -13,13 +13,6 @@ const subtitleEl = document.getElementById('subtitle');
 const notesButton = document.getElementById('notes-button');
 const notesDropdown = document.getElementById('notes-dropdown');
 
-// Definir CORS_PROXIES (funções que recebem a url e retornam a url proxy)
-const CORS_PROXIES = [
-  url => url, // direto
-  url => `https://cors-anywhere.herokuapp.com/${url}`,
-  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
-];
-
 // Inicializacao
 document.addEventListener('DOMContentLoaded', () => {
   fetchNames();
@@ -42,61 +35,67 @@ function setupEventListeners() {
 
   // Menu de notas
   if (notesButton && notesDropdown) {
+    notesButton.setAttribute('aria-expanded', 'false');
     notesButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      notesDropdown.classList.toggle('active');
+      toggleNotes();
     });
 
     // Fechar menu ao clicar fora
     document.addEventListener('click', (e) => {
       if (!notesDropdown.contains(e.target) && e.target !== notesButton) {
-        notesDropdown.classList.remove('active');
+        closeNotes();
+      }
+    });
+
+    // Fechar com ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeNotes();
+      }
+    });
+
+    // Permitir abrir/fechar com Enter/Space quando focado
+    notesButton.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleNotes();
       }
     });
   }
 }
 
-// Tenta buscar o conteúdo usando os proxies definidos (retorna texto)
-async function tryFetchWithProxies(url) {
-  for (const proxy of CORS_PROXIES) {
-    const pUrl = proxy(url);
-    try {
-      const resp = await fetch(pUrl);
-      if (!resp.ok) {
-        // tenta o próximo proxy
-        continue;
-      }
-
-      // allorigins retorna JSON { contents: '...' }
-      if (pUrl.includes('api.allorigins.win')) {
-        const json = await resp.json();
-        if (json && typeof json.contents === 'string') {
-          return json.contents;
-        } else {
-          continue;
-        }
-      }
-
-      // para proxys normais ou acesso direto, ler texto
-      const text = await resp.text();
-      if (typeof text === 'string' && text.length > 0) {
-        return text;
-      }
-    } catch (err) {
-      // ignora e tenta o próximo
-      continue;
-    }
+function toggleNotes() {
+  const isActive = notesDropdown.classList.toggle('active');
+  notesButton.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+  if (isActive) {
+    // opcional: dar foco no primeiro elemento do dropdown
+    const firstFocusable = notesDropdown.querySelector('button, a, [tabindex]');
+    if (firstFocusable) firstFocusable.focus();
+  } else {
+    notesButton.focus();
   }
-  throw new Error('Nao foi possivel buscar o arquivo (todas as tentativas falharam)');
 }
 
-// Buscar nomes diretamente do GitHub (com tentativa via proxies)
+function closeNotes() {
+  if (notesDropdown.classList.contains('active')) {
+    notesDropdown.classList.remove('active');
+    notesButton.setAttribute('aria-expanded', 'false');
+  }
+}
+
+// Buscar nomes diretamente do GitHub (fetch direto, sem proxies)
 async function fetchNames() {
   renderLoading();
 
   try {
-    const text = await tryFetchWithProxies(GITHUB_URL);
+    const response = await fetch(GITHUB_URL, { cache: 'no-cache' });
 
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    const text = await response.text();
     const names = text
       .split('\n')
       .map(name => name.trim())
@@ -107,7 +106,7 @@ async function fetchNames() {
     updateSubtitle();
   } catch (error) {
     console.error('fetchNames error:', error);
-    renderError('Nao foi possivel carregar os nomes. Verifique sua conexao ou tente novamente.');
+    renderError('Nao foi possivel carregar os nomes. Verifique sua conexao ou o URL do arquivo.');
   }
 }
 
@@ -236,9 +235,7 @@ function renderNames() {
   document.querySelectorAll('.name-card').forEach(card => {
     card.addEventListener('click', () => {
       const name = card.textContent.trim();
-      // aqui podemos, por exemplo, copiar o nome para o clipboard ou mostrar detalhes
       navigator.clipboard?.writeText(name).then(() => {
-        // feedback simples
         card.classList.add('copied');
         setTimeout(() => card.classList.remove('copied'), 800);
       }).catch(() => {});
