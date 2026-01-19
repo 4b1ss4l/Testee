@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Nomes</title>
+  <meta name="description" content="Sistema de consulta e busca de nomes">
+  <meta name="theme-color" content="#000000">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Menu de Notas (3 pontinhos) -->
+  <div class="notes-menu">
+    <button class="menu-button" id="notes-button" aria-label="Abrir notas dos desenvolvedores">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="notes-dropdown" id="notes-dropdown">
+      <h3>Notas do Site</h3>
+      <ul class="notes-list">
+        <li>Site criado para consulta rapida de nomes</li>
+        <li>Os dados sao carregados em tempo real do GitHub</li>
+        <li>Busca com filtro instantaneo</li>
+        <li>Tema escuro para melhor visualizacao</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <header class="header">
+      <h1>Consulta de Nomes</h1>
+      <p id="subtitle">Lista completa de nomes</p>
+    </header>
+
+    <div class="search-container">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input 
+        type="text" 
+        class="search-input" 
+        id="search-input" 
+        placeholder="Digite um nome para buscar..."
+        aria-label="Buscar nomes"
+      >
+    </div>
+
+    <div id="content">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
