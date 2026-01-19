@@ -1,4 +1,240 @@
-/* --- existing styles above (unchanged) --- */
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variáveis de tema (modo escuro por padrão) */
+:root {
+  --background: #000000;
+  --foreground: #fafafa;
+  --card: #1a1a1a;
+  --card-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #171717;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --border: #262626;
+  --destructive: #ef4444;
+  --radius: 0.625rem;
+  --glass: rgba(255,255,255,0.03);
+}
+
+/* Body */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container principal */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, var(--primary), rgba(250, 250, 250, 0.6));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+}
+
+/* Search */
+.search-container {
+  max-width: 42rem;
+  margin: 0 auto 2rem;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  width: 20px;
+  height: 20px;
+}
+
+.search-input {
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem 0 3rem;
+  font-size: 1rem;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--foreground);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(250, 250, 250, 0.06);
+}
+
+.search-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  gap: 1rem;
+}
+
+.error-icon {
+  width: 4rem;
+  height: 4rem;
+  color: var(--destructive);
+}
+
+.error-message {
+  font-size: 1.125rem;
+  color: var(--destructive);
+  font-weight: 500;
+}
+
+.retry-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: var(--muted);
+  border-color: var(--primary);
+}
+
+.retry-button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--muted-foreground);
+  font-size: 1.125rem;
+}
+
+/* Names grid */
+.names-section {
+  margin-bottom: 2rem;
+}
+
+.letter-heading {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.names-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .names-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .names-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.name-card {
+  padding: 1rem;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.name-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(250, 250, 250, 0.08);
+}
+
+.name-card p {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+/* Total counter */
+.total-counter {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.total-counter span {
+  font-weight: 600;
+  color: var(--primary);
+}
 
 /* Menu de notas (3 pontinhos) */
 .notes-menu {
@@ -85,4 +321,24 @@
   outline: 2px solid rgba(250,250,250,0.08);
 }
 
-/* --- existing styles below (unchanged) --- */
+/* Ajustes de responsividade gerais */
+@media (max-width: 640px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  .header p {
+    font-size: 1rem;
+  }
+  .container {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Pequenas melhorias de foco para acessibilidade */
+.menu-button:focus,
+.retry-button:focus,
+.name-card:focus,
+.search-input:focus {
+  outline: 2px solid rgba(250,250,250,0.06);
+  outline-offset: 2px;
+}
